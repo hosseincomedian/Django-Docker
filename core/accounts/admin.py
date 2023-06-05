@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin 
-from accounts.models import User
+from accounts.models import User, Profile
 
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
     model = User
     list_display = ("email", "is_staff", "is_active",)
@@ -26,4 +27,7 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
-admin.site.register(User, CustomUserAdmin)
+
+@admin.register(Profile)
+class CustomProfileAdmin(admin.ModelAdmin):
+    pass
