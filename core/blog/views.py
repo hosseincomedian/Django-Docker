@@ -3,11 +3,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from blog.models import Post
 
-def indexview(request):
-    return render(request, 'index.html')
-
-
-
     
 class PostListView(ListView):
     model = Post
@@ -17,3 +12,4 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+
