@@ -7,42 +7,34 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
-
-class PostList(APIView):
+class PostList(ListCreateAPIView):
+    queryset = Post.objects.filter(status=True)
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = PostSerializer
 
-    def get(self, request):
-        posts = Post.objects.filter(status=True)
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = PostSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-class PostDetail(APIView):
+class PostDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.filter(status=True)
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = PostSerializer
     
-    def get(self, request, pk):
-        post = get_object_or_404(Post, pk=pk, status=True)
-        serializer = PostSerializer(post)
-        return Response(serializer.data)
+    # def get(self, request, pk):
+    #     post = get_object_or_404(Post, pk=pk, status=True)
+    #     serializer = PostSerializer(post)
+    #     return Response(serializer.data)
 
-    def put(self, request, pk):
-        post = get_object_or_404(Post, pk=pk, status=True)
-        serializer = PostSerializer(post, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+    # def put(self, request, pk):
+    #     post = get_object_or_404(Post, pk=pk, status=True)
+    #     serializer = PostSerializer(post, data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data)
     
-    def delete(self, request, pk):
-        post = get_object_or_404(Post, pk=pk, status=True)
-        post.delete()
-        return Response({"message": "Item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+    # def delete(self, request, pk):
+    #     post = get_object_or_404(Post, pk=pk, status=True)
+    #     post.delete()
+    #     return Response({"message": "Item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
