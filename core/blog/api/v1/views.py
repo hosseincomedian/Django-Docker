@@ -11,15 +11,18 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework import viewsets
 from .permissions import PostAuthorPermission
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter 
+from rest_framework.filters import SearchFilter, OrderingFilter
+from .pagination import DefaultPagination
 
 class PostModelViewSet(viewsets.ModelViewSet):
         permission_classes = (IsAuthenticatedOrReadOnly, PostAuthorPermission)
         queryset = Post.objects.filter(status=True)
         serializer_class = PostSerializer   
-        filter_backends = [DjangoFilterBackend, SearchFilter]
+        filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
         filterset_fields = ('author', 'category', 'status',)
         search_fields = ['title', 'content']
+        ordering_fields = ('publish_date',)
+        pagination_class = DefaultPagination
         
         
 class CategoryModelViewSet(viewsets.ModelViewSet):
