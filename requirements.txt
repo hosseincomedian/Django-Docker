@@ -4,3 +4,5 @@ pillow
 djangorestframework
 markdown       
 django-filter  
+drf-yasg[validation]
+coreapi pyyaml
