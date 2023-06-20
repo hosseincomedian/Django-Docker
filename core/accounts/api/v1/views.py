@@ -74,7 +74,6 @@ class ChangePasswordApiView(generics.GenericAPIView):
             self.object.save()
             return Response({'details':'password changed successfully'}, status=status.HTTP_200_OK )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 class ProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
