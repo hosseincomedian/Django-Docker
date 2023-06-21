@@ -30,7 +30,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-class AuthTokenSerializer(serializers.Serializer):
+class CustomAuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField(
         label=_("email"),
         write_only=True
@@ -60,6 +60,8 @@ class AuthTokenSerializer(serializers.Serializer):
             if not user:
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
+            if not user.is_verified:
+                raise serializers.ValidationError({"detail":"User is not verified"})
         else:
             msg = _('Must include "email" and "password".')
             raise serializers.ValidationError(msg, code='authorization')
@@ -70,7 +72,8 @@ class AuthTokenSerializer(serializers.Serializer):
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
-
+        if not self.user.is_verified:
+            raise serializers.ValidationError({"detail":"User is not verified"})
         refresh = self.get_token(self.user)
 
         data["refresh"] = str(refresh)

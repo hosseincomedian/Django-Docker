@@ -1,5 +1,5 @@
 from rest_framework import generics
-from .serializer import RegistrationSerializer, AuthTokenSerializer, CustomTokenObtainPairSerializer, ChangePaswordSerializer, ProfileSerializer
+from .serializer import RegistrationSerializer, CustomAuthTokenSerializer, CustomTokenObtainPairSerializer, ChangePaswordSerializer, ProfileSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -11,8 +11,14 @@ from rest_framework import generics
 from django.contrib.auth import get_user_model
 from accounts.models import Profile
 from django.shortcuts import get_object_or_404
+from mail_templated import EmailMessage
+from accounts.api.utils import EmailThread
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 User = get_user_model()
+
+
 
 class RegistrationApiView(generics.GenericAPIView):
     serializer_class = RegistrationSerializer
@@ -21,15 +27,26 @@ class RegistrationApiView(generics.GenericAPIView):
         serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            email = serializer.validated_data['email']
             data = {
-                'email': serializer.validated_data['email'],
+                'email': email,
             }
+            user_obj = get_object_or_404(User, email= email)
+            token = self.get_tokens_for_user(user_obj)
+            email_obj = EmailMessage('email/activation_email.tpl', {'token': token}, 'ho@gmail.com',to=[email])
+            EmailThread(email_obj).start()
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
+    
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
+
+    
 class CustomAuthToken(ObtainAuthToken):
-    serializer_class = AuthTokenSerializer
+    serializer_class = CustomAuthTokenSerializer
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
@@ -87,3 +104,15 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         return super().get_queryset()
     
+class TestEmailSend(generics.GenericAPIView):
+    def post(self, request):
+        self.email = 'ho2@gmail.com'
+        user_obj = get_object_or_404(User, email=self.email)
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'ho@gmail.com',to=[self.email])
+        EmailThread(email_obj).start()
+        return Response("email sent", status=status.HTTP_200_OK)
+    
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)

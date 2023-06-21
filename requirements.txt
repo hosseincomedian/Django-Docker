@@ -6,3 +6,5 @@ markdown
 django-filter  
 drf-yasg[validation]
 django-coreapi
+djangorestframework-simplejwt
+django-mail-templated
