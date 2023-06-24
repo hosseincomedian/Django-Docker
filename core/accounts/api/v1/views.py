@@ -81,7 +81,7 @@ class ChangePasswordApiView(generics.GenericAPIView):
         return self.request.user
     
     def put(self, request, *args, **kwargs):
-        self.ibject = self.get_object()
+        self.object = self.get_object()
         serializer = self.get_serializer(data = request.data)
     
         if serializer.is_valid():

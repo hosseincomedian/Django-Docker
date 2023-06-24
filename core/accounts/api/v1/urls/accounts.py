@@ -10,7 +10,6 @@ app_name = 'api-v1'
 urlpatterns = [
     #registration
     path('registration/', views.RegistrationApiView.as_view(), name='registration'),
-    
     path('test-email/', views.TestEmailSend.as_view(), name='test-email'),
 
     #activation
