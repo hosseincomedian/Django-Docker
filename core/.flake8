@@ -1,3 +1,5 @@
+[flake8]
+
 exclude =
     .git,
     .gitignore,
@@ -6,6 +8,6 @@ exclude =
     __pycache__,
     venv,
     .env,
-    settings,
+    settings
 ignore =
     E501
