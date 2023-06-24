@@ -8,3 +8,6 @@ drf-yasg[validation]
 django-coreapi
 djangorestframework-simplejwt
 django-mail-templated
+djoser
+black
+flake8

@@ -1,9 +1,8 @@
-from django.urls import include, path
+from django.urls import path
 from accounts.api.v1 import views
 
-app_name = 'api-v1'
+app_name = "api-v1"
 
 urlpatterns = [
-    path('', views.ProfileApiView.as_view(), name='profile'),
-
+    path("", views.ProfileApiView.as_view(), name="profile"),
 ]

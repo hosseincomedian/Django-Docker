@@ -1,15 +1,13 @@
-from typing import Any, Dict
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import ListView, DetailView
 from blog.models import Post
 
-    
+
 class PostListView(ListView):
     model = Post
-    context_object_name = 'posts'
-    paginate_by = 2 
-    ordering = 'id'
+    context_object_name = "posts"
+    paginate_by = 2
+    ordering = "id"
+
 
 class PostDetailView(DetailView):
     model = Post
-
