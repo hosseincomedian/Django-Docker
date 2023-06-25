@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView
 from blog.models import Post
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 class PostListView(ListView):
     model = Post
     context_object_name = "posts"
