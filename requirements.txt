@@ -17,3 +17,4 @@ Faker
 django-cors-headers
 celery
 django-redis
+gunicorn
